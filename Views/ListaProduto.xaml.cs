@@ -43,6 +43,25 @@ public partial class ListaProduto : ContentPage
         }
     }
 
+    private async void OnCategoriaSelecionada(object sender, EventArgs e)
+    {
+        var picker = sender as Picker;
+        var categoria = picker.SelectedItem.ToString();
+
+        List<Produto> produtos = await App.Db.GetAll();
+
+        if (string.IsNullOrEmpty(categoria) || categoria == "Todos")
+        {
+            lst_produtos.ItemsSource = produtos;
+        }
+        else
+        {
+            lst_produtos.ItemsSource = produtos
+                .Where(p => p.Categoria == categoria)
+                .ToList();
+        }
+    }
+
     private async void txt_search_TextChanged(object sender, TextChangedEventArgs e)
     {
         try
@@ -75,6 +94,12 @@ public partial class ListaProduto : ContentPage
 
         DisplayAlert("Total dos Produtos", msg, "OK");
     }
+
+    private async void ToolbarItem_Clicked_2(object sender, EventArgs e)
+    {
+        await Navigation.PushAsync(new RelatorioPage());
+    }
+
 
     private async void MenuItem_Clicked(object sender, EventArgs e)
     {
